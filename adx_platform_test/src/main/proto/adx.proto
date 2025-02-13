@@ -1,0 +1,359 @@
+syntax = "proto3";
+
+option go_package = "./proto";
+
+package proto;
+
+message AdxRequest {
+  // -------------流量包相关 -------------
+  // 应用包名
+  string bundle_id = 1;
+  // 包的版本号(字符串版本号)
+  string ver = 2;
+  //包的版本号（数字版本号）
+  string ver_n =3;
+  //广告sdk的版本号
+  string sdk_ver=4;
+  // -------------设备相关 -------------
+  //操作系统，ios/android
+  string os=5;
+  //苹果广告id
+  string idfa=6;
+  //iOS dev标识符
+  string idfv=7;
+  //android设备的id
+  string gaid=8;
+  //华为手机专属
+  string oaid=9;
+  //设备型号
+  string model=10;
+  //手机品牌
+  string vendor=11;
+  //运营商
+  string carrier=12;
+  //移动网络标识符
+  string mcc=13;
+  //网络类型
+  string network=14;
+  //设备请求ip
+  string ip=15;
+  //用户所在的国家
+  string country=16;
+  // -------------广告相关 -------------
+  //  //dsp的名称
+  //  string dsp_name=17;
+  //  //dsp 返回的ecpm
+  //  string ecpm=18;
+  //  //广告id
+  //  string adid=19;
+  //  //素材id
+  //  string crid=20;
+  //  //广告包
+  //  string ads_pkg_name=21;
+  //  //广告主域名
+  //  repeated string adomain=22;
+  //请求各家dsp的明细
+  repeated BidInfo bid_info=23;
+  // -------------请求相关 -------------
+  //业务侧调用时会有一个id
+  string sid=24;
+  //请求id
+  string rid=25;
+  //广告位id
+  string pid=26;
+  //广告位类型
+  string p_type=27;
+  //客户端时间戳
+  int64 cst=28;
+  //服务端接受请求时间戳
+  int64 timestamp=29;
+  //服务端处理完请求时间戳
+  int64 et=30;
+  //从开始处理到请求完成所使的时间
+  int64 dur_t=31;
+  // -------------其他信息 -------------
+  //ab信息
+  string ab=32;
+  //广告的详细信息
+  string adfo=33;
+  //扩展字段
+  string ext=34;
+  // 事件名称
+  string event_name = 35;
+  BidInfo win_ad=36;
+  //三方广告版位id
+  string lid = 37;
+  //设备ua
+  string ua = 38;
+  //设备版本
+  string os_version = 39;
+  //设备语言
+  string language = 40;
+  //设备类型
+  string devicetype = 41;
+
+}
+message BidInfo {
+  int32 ret_code = 1;
+  string ret_msg = 2;
+  int32 dsp_http_code = 3;
+  int64 dsp_id = 4;
+  string dsp_g_name = 5;
+  string dsp_name = 6;
+  int32 target_id = 7;
+  string tagid = 8;
+  int32 ad_type = 9;
+  float bidfloor = 10;
+  float price = 11;
+  int32 w = 12;
+  int32 h = 13;
+  string id = 14;
+  int32 api = 15;
+  string adomain = 16;
+  string crid = 17;
+  int64 dur_t=18;
+  string dsp_req_id=19;
+  string ads_pkg_name=20;
+  string dsp_country=21;
+  string adid=22;
+  string cid=23;
+  string cat=24;
+  string request=25;
+  string fill=26;
+  string index=27;
+}
+// 字段描述参照AdxRequest
+message AdxShow {
+  string bundle_id = 1;
+  string ver = 2;
+  string ver_n =3;
+  string sdk_ver=4;
+  string lid=5;
+  string os=6;
+  string idfa=7;
+  string idfv=8;
+  string gaid=9;
+  string oaid=10;
+  string model=11;
+  string vendor=12;
+  string carrier=13;
+  string mcc=14;
+  string network=15;
+  string ip=16;
+  string country=17;
+  string dsp_name=18;
+  string ecpm=19;
+  string adid=20;
+  string crid=21;
+  string ads_pkg_name=22;
+  string adomain=23;
+  string sid=24;
+  string rid=25;
+  string pid=26;
+  string p_type=27;
+  int64 cst=28;
+  string ab=29;
+  string adfo=30;
+  string ext=31;
+  int64 timestamp=32;
+  // 事件名称
+  string event_name = 33;
+  //设备ua
+  string ua = 34;
+  //设备版本
+  string os_version = 35;
+  //设备语言
+  string language = 36;
+  //设备类型
+  string devicetype = 37;
+  //rtb响应中的cid
+  string cid = 38;
+  //rtb响应中的数组
+  string cat = 39;
+  //请求dsp的tagid
+  string tagid = 40;
+  // 请求dsp的targeting id
+  string target_id = 41;
+  //请求dsp的country
+  string  dsp_country=42;
+  //dsp广告类型
+  string ad_type=43;
+  //dsp id
+  string dsp_id = 44;
+  //dsp分组id
+  string dsp_group_id=45;
+  //请求底价
+  string bid_floor=46;
+}
+// 字段描述参照AdxRequest
+message AdxClick {
+  string bundle_id = 1;
+  string ver = 2;
+  string ver_n =3;
+  string sdk_ver=4;
+  string lid=5;
+  string os=6;
+  string idfa=7;
+  string idfv=8;
+  string gaid=9;
+  string oaid=10;
+  string model=11;
+  string vendor=12;
+  string carrier=13;
+  string mcc=14;
+  string network=15;
+  string ip=16;
+  string country=17;
+  string dsp_name=18;
+  string ecpm=19;
+  string adid=20;
+  string crid=21;
+  string ads_pkg_name=22;
+  string adomain=23;
+  string sid=24;
+  string rid=25;
+  string pid=26;
+  string p_type=27;
+  int64 cst=28;
+  string ab=29;
+  string adfo=30;
+  string ext=31;
+  int64 timestamp=32;
+  // 事件名称
+  string event_name = 33;
+  //设备ua
+  string ua = 34;
+  //设备版本
+  string os_version = 35;
+  //设备语言
+  string language = 36;
+  //设备类型
+  string devicetype = 37;
+  //rtb响应中的cid
+  string cid = 38;
+  //rtb响应中的数组
+  string cat = 39;
+  //请求dsp的tagid
+  string tagid = 40;
+  // 请求dsp的targeting id
+  string target_id = 41;
+  //请求dsp的country
+  string  dsp_country=42;
+  //dsp广告类型
+  string ad_type=43;
+  //dsp id
+  string dsp_id = 44;
+  //dsp分组id
+  string dsp_group_id=45;
+  //请求底价
+  string bid_floor=46;
+}
+
+//素材送审
+message GeoEdgeRequest {
+  /*事件信息*/
+  //事件名称
+  string event_name = 1;
+  /*流量信息*/
+  //包名
+  string bundle_id = 2;
+  //包的版本号(字符串版本号)
+  string ver = 3;
+  //包的版本号（数字版本号）
+  string ver_n = 4;
+  //广告sdk的版本号
+  string sdk_ver = 5;
+  //三方广告版位id
+  string lid = 6;
+  /*请求信息*/
+  //业务侧调用时会有一个id
+  string sid = 7;
+  // 请求id
+  string rid = 8;
+  //广告位id
+  string pid = 9;
+  //广告位类型
+  string p_type = 10;
+  //客户端时间戳
+  string cst = 11;
+  //请求dsp的target id
+  string target_id = 12;
+  /* geoedge 参数*/
+  //dsp分组名称
+  string dsp_group_id = 13;
+  //国家码
+  string country = 14;
+  //素材id
+  string crid = 15;
+  string os = 16;
+  //GeoEdge返回的项目id
+  string project_id = 17;
+  //GeoEdge返回的项目名称
+  string project_name = 18;
+  // 送审时间戳
+  int64 timestamp = 19;
+  //其他信息
+  //ab信息
+  string ab = 20;
+  string ext = 21;
+  // adm数据
+  bytes adm= 22;
+}
+
+//素材审核失败
+message GeoEdgeAlert {
+  // 事件名称
+  string event_name = 1;
+  // 项目ID
+  string project_id = 2;
+  // 项目名称
+  string project_name = 3;
+  // 时间戳
+  int64 timestamp = 4;
+  // 警报名称
+  string alert_name = 5;
+  // 触发类型ID
+  string trigger_type_id = 6;
+  // 触发类型名称
+  string trigger_type_name = 7;
+  // 触发元数据
+  string trigger_metadata = 8;
+  // 响应JSON字符串
+  string resp_json = 9;
+  // 创意ID
+  string crid = 10;
+  // 国家
+  string country=11;
+  // 扩展地段
+  string ext = 13;
+}
+
+//素材扫描
+message GeoEdgeScan {
+  // 事件名称
+  string event_name = 1;
+  // 项目ID
+  string project_id = 2;
+  // 项目名称
+  string project_name = 3;
+  // 素材ID
+  string crid = 4;
+  // 时间戳
+  int64 timestamp = 5;
+  // 扫描时间戳
+  int64  scan_timestamp = 6;
+  //素材URL
+  string creative_screenshot_url = 7;
+  //落地页URL
+  string landing_page_screenshot_url = 8;
+  //原素材URL
+  string creative_url = 9;
+  //原落地页URL
+  string landing_page_url = 10;
+  // 国家
+  string country=11;
+  // 响应JSON
+  string resp = 12;
+  // 扩展地段
+  string ext = 13;
+}
