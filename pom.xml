@@ -19,7 +19,6 @@
     <module>adx_platform_dws</module>
     <module>adx_platform_ods</module>
     <module>adx_platform_udf</module>
-    <module>adx_platform_test</module>
   </modules>
 
   <properties>
