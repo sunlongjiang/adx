@@ -2,11 +2,14 @@ package com.hungrystudio.adx.sink;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hungrystudio.adx.dto.*;
+import org.apache.flink.connector.file.sink.FileSink;
 import org.apache.flink.core.fs.Path;
-import org.apache.flink.streaming.api.functions.sink.filesystem.StreamingFileSink;
+import org.apache.flink.streaming.api.functions.sink.filesystem.BucketAssigner;
 import org.apache.flink.streaming.api.functions.sink.filesystem.bucketassigners.BasePathBucketAssigner;
 import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.OnCheckpointRollingPolicy;
 import org.apache.parquet.hadoop.metadata.CompressionCodecName;
+
+import java.util.function.Function;
 
 
 /**
@@ -16,56 +19,39 @@ import org.apache.parquet.hadoop.metadata.CompressionCodecName;
  */
 public class S3DbSink {
 
-    public static StreamingFileSink getSinkParquetLOZ(JSONObject params) {
+    private static <T> FileSink <T> createFileSink(String bucketPath, String target, Class <T> dataTypeClass,
+                                                   Function <String, BasePathBucketAssigner<T>> bucketAssignerFunction) {
+
+        return FileSink
+                .forBulkFormat(
+                        new Path(bucketPath),
+                        PaulParquetAvroWriters.forReflectRecord(dataTypeClass, CompressionCodecName.GZIP)
+                )
+                .withRollingPolicy(OnCheckpointRollingPolicy.build())
+                .withBucketAssigner(bucketAssignerFunction.apply(target))
+                .build();
+    }
+
+
+    public static FileSink <?> getSinkParquetLOZ(JSONObject params) {
         String bucket = params.getString("bucket");
         String target = params.getString("target");
         String logType = params.getString("logType");
-        if(logType.equals("AdxClick")){
-            StreamingFileSink<AdxClickData> sink = StreamingFileSink
-                    .forBulkFormat(new Path(bucket), PaulParquetAvroWriters.forReflectRecord(AdxClickData.class, CompressionCodecName.GZIP))
-                    .withRollingPolicy(OnCheckpointRollingPolicy.build())
-                    .withBucketAssigner(new AdxClickPathBucketAssigner(target))
-                    .build();
-            return sink;
-        }else if(logType.equals("AdxRequest")){
-            StreamingFileSink<AdxRequestData> sink = StreamingFileSink
-                    .forBulkFormat(new Path(bucket), PaulParquetAvroWriters.forReflectRecord(AdxRequestData.class, CompressionCodecName.GZIP))
-                    .withRollingPolicy(OnCheckpointRollingPolicy.build())
-                    .withBucketAssigner(new AdxRequestPathBucketAssigner(target))
-                    .build();
-            return sink;
-        }else if(logType.equals("AdxShow")){
-            StreamingFileSink<AdxShowData> sink = StreamingFileSink
-                    .forBulkFormat(new Path(bucket), PaulParquetAvroWriters.forReflectRecord(AdxShowData.class, CompressionCodecName.GZIP))
-                    .withRollingPolicy(OnCheckpointRollingPolicy.build())
-                    .withBucketAssigner(new AdxShowPathBucketAssigner(target))
-                    .build();
-            return sink;
-        }else if(logType.equals("AdxGeoedge")){
-            StreamingFileSink<AdxGeoedgeData> sink = StreamingFileSink
-                    .forBulkFormat(new Path(bucket), PaulParquetAvroWriters.forReflectRecord(AdxGeoedgeData.class, CompressionCodecName.GZIP))
-                    .withRollingPolicy(OnCheckpointRollingPolicy.build())
-                    .withBucketAssigner(new AdxGeoedgePathBucketAssigner(target))
-                    .build();
-            return sink;
-        }else if(logType.equals("AdxAlert")){
-            StreamingFileSink<AdxGeoedgeAlertData> sink = StreamingFileSink
-                    .forBulkFormat(new Path(bucket), PaulParquetAvroWriters.forReflectRecord(AdxGeoedgeAlertData.class, CompressionCodecName.GZIP))
-                    .withRollingPolicy(OnCheckpointRollingPolicy.build())
-                    .withBucketAssigner(new AdxGeoedgeAlertPathBucketAssigner(target))
-                    .build();
-            return sink;
-        }else {
-            StreamingFileSink<AdxGeoedgeScanData> sink = StreamingFileSink
-                    .forBulkFormat(new Path(bucket), PaulParquetAvroWriters.forReflectRecord(AdxGeoedgeScanData.class, CompressionCodecName.GZIP))
-                    .withRollingPolicy(OnCheckpointRollingPolicy.build())
-                    .withBucketAssigner(new AdxGeoedgeScanPathBucketAssigner(target))
-                    .build();
-            return sink;
+
+        switch (logType) {
+            case "AdxClick":
+                return createFileSink(bucket, target, AdxClickData.class, AdxClickPathBucketAssigner::new);
+            case "AdxRequest":
+                return createFileSink(bucket, target, AdxRequestData.class, AdxRequestPathBucketAssigner::new);
+            case "AdxShow":
+                return createFileSink(bucket, target, AdxShowData.class, AdxShowPathBucketAssigner::new);
+            case "AdxGeoedge":
+                return createFileSink(bucket, target, AdxGeoedgeData.class, AdxGeoedgePathBucketAssigner::new);
+            case "AdxAlert":
+                return createFileSink(bucket, target, AdxGeoedgeAlertData.class, AdxGeoedgeAlertPathBucketAssigner::new);
+            default:
+                return createFileSink(bucket, target, AdxGeoedgeScanData.class, AdxGeoedgeScanPathBucketAssigner::new);
         }
-
-
-
     }
 }
 
